@@ -1,0 +1,24 @@
+{
+    "name": "zendframework/skeleton-application",
+    "description": "Skeleton Application for ZF2",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.3.*",
+        "zendframework/zend-developer-tools": "dev-master",
+        "coolcsn/csn-user": "dev-master",
+        "coolcsn/csn-authorization": "dev-master",
+        "webino/webino-image-thumb": "*",
+        "tecnick.com/tcpdf": "dev-master",
+        "zendframework/zendpdf": "~2.0",
+        "dompdf/dompdf": "~0.6",
+        "dino/dompdf-module": "dev-master",
+        "slm/mail": "~1.5"
+    }
+}
