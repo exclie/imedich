@@ -127,7 +127,7 @@ $(document).ready(function() {
   }
 
 	function guardarEstudio () {
-    if($("#cIdPaciente").val() != '' && $("#sDoctor").val() != '' && $('#cFecha').val() != ''){
+    if($("#cIdPaciente").val() != '' && $("#sDoctor").val() != '' && $('#cFecha').val() != '' && $('#sTipos').val() != null){
           $.ajax({
                   type: "POST",
                   url: "nuevoestudio",
@@ -143,7 +143,7 @@ $(document).ready(function() {
                   }
             });
         } else {
-          alert('Se necesita un paciente y un doctor registrados o la fecha esta vacía.'); 
+          alert('Se necesita un paciente y un doctor registrados o la fecha esta vacía y además debe seleccionar por lo menos un servicio para proporcionar.'); 
         }
 		
 	}

@@ -9,6 +9,11 @@
             ->appendFile($this->basePath() . '/public/js/transition.js')
             ->appendFile($this->basePath() . '/public/js/chosen_v1.1.0/chosen.jquery.js');
 ?>
+<?php if($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 5) {
+    $permiso = false;
+  } else {
+    $permiso = true;
+    } ?>
 <div class="col-lg-12">
     <h3 style="float:left">ESTUDIOS</h3>
     <div class="dropdown" style="float:right">
@@ -17,10 +22,10 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="estudioModal()">Nuevo estudio</a></li>
+        <?php if($permiso) { ?><li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="estudioModal()">Nuevo estudio</a></li><?php } ?>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/estudios/categorias">Categorías de estudio</a></li>
-        <li role="presentation" class="divider"></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/pacientes/pacientenuevo">Nuevo paciente</a></li>
+        <?php if($permiso) { ?><li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/pacientes/pacientenuevo">Nuevo paciente</a></li><?php } ?>
         <li role="presentation" class="divider"></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agenda</a></li>
       </ul>

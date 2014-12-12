@@ -185,7 +185,7 @@ class AgendaController extends AbstractActionController
           $nombredependencia = $objectManager->find('CsnUser\Entity\Dependencias',$this->request->getPost('dependencia'))->getNOMBREDEPENDENCIA();
           $agenda->setTelefono1($this->request->getPost('telefono1'));
           $agenda->setTelefono2($this->request->getPost('telefono2'));
-          $agenda->setPacientenr($this->request->getPost('pacientenr'));
+          $agenda->setPacientenr($this->request->getPost('title'));
           $agenda->setStart($this->request->getPost('start'));
           $agenda->setEnd($this->request->getPost('end'));
           $agenda->setColor($this->request->getPost('color'));

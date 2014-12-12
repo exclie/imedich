@@ -209,6 +209,7 @@ function crearcalendario() {
 			editable: <?php if($this->identity()->getRole()->getId() != '5' && $this->identity()->getRole()->getId() != '4') {echo "true";} else { echo "false";} ?>,
 			defaultView: 'agendaWeek',
 			lang: 'es',
+			<?php if($this->identity()->getRole()->getId() != '5' && $this->identity()->getRole()->getId() != '4') { ?>
 			eventClick: function(calEvent, jsEvent, view) {
 					console.log(calEvent);
 					document.getElementById('agendas').reset();
@@ -238,6 +239,7 @@ function crearcalendario() {
 			        $('#myModal').modal('show');
 
 			},
+			<?php } ?>
 			<?php if($this->identity()->getRole()->getId() != '5' && $this->identity()->getRole()->getId() != '4') { ?>
 			dayClick: function(date, jsEvent, view) {
 			        var fin = date;

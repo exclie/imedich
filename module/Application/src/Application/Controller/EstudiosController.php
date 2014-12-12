@@ -292,6 +292,7 @@ class EstudiosController extends AbstractActionController
           $Tiposestudio->setNOMBRECATEGORIA($this->request->getPost('NOMBRECATEGORIA'));
           $Tiposestudio->setCOSTO($this->request->getPost('COSTO'));
           $Tiposestudio->setACTIVO($this->request->getPost('ACTIVO'));
+          $Tiposestudio->setRECOMENDACION($this->request->getPost('RECOMENDACION'));
           $Tiposestudio->setDEPENDENCIA($objectManager->find('CsnUser\Entity\Dependencias',$this->request->getPost('DEPENDENCIA')));
           $objectManager->merge($Tiposestudio);
           $objectManager->flush();  

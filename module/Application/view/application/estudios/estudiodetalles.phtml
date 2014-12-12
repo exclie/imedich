@@ -167,7 +167,7 @@ $(document).ready(function() {
         $("#"+id).replaceWith($span);
         $span.on("click", function() { switchToInput(id) });
     };
-    var selectMaterial = "<select class='selectMat' id='selectMat'><?php foreach($listaMateriales as $mate) { ?><option value='<?php echo $mate['ID'] ?>'><?php echo $mate['MATERIAL'] ?></option><?php } ?></select>";
+    var selectMaterial = "<select class='selectMat' id='selectMat'><?php foreach($listaMateriales as $mate) { ?><option value='<?php echo $mate['ID'] ?>'><?php echo addslashes($mate['MATERIAL']) ?></option><?php } ?></select>";
     function cambiarSelect (dom) {
         $(dom).removeAttr('onclick');
         $(dom).parent().first().html(selectMaterial);

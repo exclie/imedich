@@ -48,12 +48,23 @@ class CategoriasForm extends Form
             'type'    => 'Zend\Form\Element\Text',
             'name'    => 'COSTO',
             'options' => array(
-                'label' => 'Costo del estudio:',
+                'label' => 'Costo del estudio:', 
             ),
             'attributes' => array(
                 'class' => 'Input form-control',
                 'id' => 'cCosto',
                 'onblur' => 'verificar_campo(this)',
+            ),
+        ));
+        $this->add(array(
+            'type'    => 'Zend\Form\Element\Textarea',
+            'name'    => 'RECOMENDACION',
+            'options' => array(
+                'label' => 'Recomendaciones para el estudio:',
+            ),
+            'attributes' => array(
+                'class' => 'Input form-control',
+                'id' => 'aReco',
             ),
         ));
 
