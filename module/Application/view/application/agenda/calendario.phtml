@@ -17,7 +17,7 @@
 <script src='<?php echo $this->basePath() ?>/public/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js'></script>
 <script src='<?php echo $this->basePath() ?>/public/js/fullcalendar-2.1.1/lang-all.js'></script>
 <script src='<?php echo $this->basePath() ?>/public/js/colorpicker/jquery.simplecolorpicker.js'></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js"></script>
+<script src='<?php echo $this->basePath() ?>/public/js/numeral.min.js'></script>
 <script type="text/javascript">
 	<?php if ($nombre) { ?> 
 
@@ -26,13 +26,15 @@
 	$(document).ready(function() {
     // page is now ready, initialize the calendar...
     $('#sCategorias').chosen({width:'100%'});
+    $('#sCategorias').on('change',function() {
+      recomendacionesx();
+    });
     $('#sColores').simplecolorpicker();
     $('#lBorrar').hide();
     crearcalendario();
     var cambiartipos = function() {
       tiposx(this.value);
     };
-    
     $('#sDependencia').on('change',cambiartipos);
     function split( val ) {
           return val.split( /;\s*/ );
@@ -113,16 +115,15 @@
 
 });
 function borrarevento () {
-	$.post('borrarevento',{id:$("#id_evento").val()},
+	$.post('<?php echo $this->basePath() ?>/agenda/borrarevento',{id:$("#id_evento").val()},
 		function (data){
 			location.reload();
 	});
 }
 function guardarevento () {
-	var evento = $('#cFin').val();
-	evento = evento.split("T");
-	fin = evento[0]+"T"+$('#hasta').val()+':00';
-	inicio = evento[0]+"T"+$('#desde').val()+':00';
+	var evento = $('#cFecha').val();
+	fin = evento+"T"+$('#hasta').val()+':00';
+	inicio = evento+"T"+$('#desde').val()+':00';
 	if(inicio < fin) {
 		$('#cFin').val(fin);
 		$('#cInicio').val(inicio);
@@ -180,6 +181,28 @@ function tiposx (id) {
           $('#sCategorias').trigger('chosen:updated');
           });
   }
+function recomendacionesx () {
+	$('#aRecomendaciones').empty();
+	if($('#sCategorias').val() != null) {
+			valores = '"'+$('#sCategorias').val()+'"';
+		    $.ajax({
+		            type: "POST",
+		            url: "<?php echo $this->basePath() ?>/estudios/getrecomendaciones",
+		            data: {tiposestudio: valores},
+		            dataType: "json",
+		            success: function(data) {		            
+		               	for(i = 0; i < data.length; i++){
+		               		if(data[i].RECOMENDACION != 'null' && data[i].RECOMENDACION != null) {
+		               			$('#aRecomendaciones').append(' ** RECOMENDACION PARA: '+data[i].NOMBRECATEGORIA+' ** \n'+data[i].RECOMENDACION+'\n\n');
+		               		}		           
+		                }
+		            },
+		            error: function(){
+		                  $('#aRecomendaciones').empty();
+		            }
+		    });
+	} 
+  }
 
 function crearcalendario() {
 	$('#cDoctor').val($('#sDoctor').val());
@@ -215,6 +238,7 @@ function crearcalendario() {
 					document.getElementById('agendas').reset();
 			        //alert('Event: ' + calEvent.start.format());
 			        var arreglo_fecha = calEvent.start.format().split("T");
+			        $('#cFecha').val(arreglo_fecha[0]);
 			        $("#sCategorias option:selected").removeAttr("selected");
 			        $("#cInicio").val(calEvent.start.format());
 			        $("#desde").val(calEvent.start.format("HH:mm"));
@@ -235,7 +259,7 @@ function crearcalendario() {
 			   		$("#lBorrar").show();
 			   		$("#sColores").val(calEvent.color);
 			        $("#modalLabel").text(calEvent.start.format("DD/MM/YY"));
-			        verevento();
+			        verevento();			   
 			        $('#myModal').modal('show');
 
 			},
@@ -250,6 +274,8 @@ function crearcalendario() {
 			        <?php } ?>
 			        $("#cInicio").val(date.format());
 			        $("#cFin").val(fin.toISOString());
+			        var arreglo_fecha = date.format().split("T");
+			        $('#cFecha').val(arreglo_fecha[0]);
 			        $("#desde").val(date.format("HH:mm"));
 			        fin.add('m',30);
 			        $("#hasta").val(fin.format("HH:mm"));
@@ -258,17 +284,21 @@ function crearcalendario() {
 			        $("#cIdPaciente").val('');
 			        $("#sCategorias option:selected").removeAttr("selected");
 			        $("#lBorrar").hide();
+			        recomendacionesx();
 			        $("#modalLabel").text(date.format("DD/MM/YY"));
 			        $('#myModal').modal('show');
 			        $("#sCategorias").trigger("chosen:updated");
 			  	
 			},
 			eventDrop: function (event,delta,revertFunc) {
+				var fecha = event.end.format();
+				fecha = fecha.split('T');			
 				$("#sCategorias option:selected").removeAttr("selected");
 				$("#cInicio").val(event.start.format());
 				$("#cTitle").val(event.pacientenr);
 				$("#aDesc").val(event.descripcion);
 				$("#cFin").val(event.end.format());
+				$("#cFecha").val(fecha[0]);
 				$("#sDependencia").val(event.dependencia);
 				$("#id_evento").val(event.id);
 				$("#cRefDocId").val(event.refdocid);
@@ -318,6 +348,7 @@ function verevento() {
                		$("#sCategorias option[value = '"+data[i].ID+"' ]").attr("selected", true);
                }
            		$("#sCategorias").trigger("chosen:updated");
+           		recomendacionesx();
             },
             error: function(){
                   alert('Ocurrió un error, inténtelo más tarde.');
@@ -363,7 +394,7 @@ function verevento() {
 					</td>
 				</tr>
 				<tr>
-					<td><div class="col-lg-4"><b>Inicio:</b><input class="form-control" type="time" id="desde" /></div> <div class="col-lg-4"><b>Fin: </b><input class="form-control col-lg-4" type="time" id="hasta" /></div></td>
+					<td><div class="col-lg-4"><b>Fecha:</b><input class="form-control" type="date" id="cFecha" /></div><div class="col-lg-4"><b>Inicio:</b><input class="form-control" type="time" id="desde" /></div><div class="col-lg-4"><b>Fin: </b><input class="form-control col-lg-4" type="time" id="hasta" /></div></td>
 				</tr>
 				<tr>
 					<td>
@@ -409,6 +440,18 @@ function verevento() {
 				</tr>
 			</tbody>
 		</table>
+			<div class="panel-heading">
+		      <h4 class="panel-title">
+		        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:dodgerblue">
+		          Ver recomendaciones
+		        </a>
+		      </h4>
+		    </div>
+		    <div id="collapseOne" class="panel-collapse collapse">
+		      <div class="panel-body">
+		        	<textarea class="form-control" id="aRecomendaciones" disabled="disabled" rows="10"></textarea> 
+		      </div>
+		    </div>
 		<div class="form-element col-lg-12">
 			<?php echo $this->formRow($form->get('color')) ?>
 		</div>

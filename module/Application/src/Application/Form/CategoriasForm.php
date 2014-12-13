@@ -65,6 +65,7 @@ class CategoriasForm extends Form
             'attributes' => array(
                 'class' => 'Input form-control',
                 'id' => 'aReco',
+                'rows' => '10'
             ),
         ));
 

@@ -278,6 +278,7 @@ class EstudiosController extends AbstractActionController
         $categoria = $queryCategoria->getArrayResult();
         $form->get('NOMBRECATEGORIA')->setAttributes(array('value' => $categoria[0][0]['NOMBRECATEGORIA']));
         $form->get('COSTO')->setAttributes(array('value' => $categoria[0][0]['COSTO']));
+        $form->get('RECOMENDACION')->setAttributes(array('value' => $categoria[0][0]['RECOMENDACION']));
         $form->get('DEPENDENCIA')->setAttributes(array('value' => $categoria[0]['DEPENDENCIA']));
         $form->get('ID')->setAttributes(array('value' => $categoria[0][0]['ID']));
         $form->get('ACTIVO')->setAttributes(array('checked' => $categoria[0][0]['ACTIVO']));
@@ -301,6 +302,7 @@ class EstudiosController extends AbstractActionController
           $Tiposestudio->setNOMBRECATEGORIA($this->request->getPost('NOMBRECATEGORIA'));
           $Tiposestudio->setCOSTO($this->request->getPost('COSTO'));
           $Tiposestudio->setDEPENDENCIA($objectManager->find('CsnUser\Entity\Dependencias',$this->request->getPost('DEPENDENCIA')));
+          $Tiposestudio->setRECOMENDACION($this->request->getPost('RECOMENDACION'));
           $objectManager->persist($Tiposestudio);
           $objectManager->flush();  
         }
@@ -353,6 +355,18 @@ class EstudiosController extends AbstractActionController
         $queryCosto = $om->createQuery("UPDATE CsnUser\Entity\Tiposestudio t SET t.COSTO = t.COSTO * $multiplicador WHERE t.ID > 0");
         $p = $queryCosto->execute();
         return new JsonModel();
+      }
+    }
+
+    public function getrecomendacionesAction()
+    {
+      if($this->request->isPost()) {
+        $om = $this->getObjectManager();
+        $valores = $this->request->getPost('tiposestudio');
+        $valores = str_replace('"', '', $valores);
+        $queryReco = $om->createQuery('SELECT t.RECOMENDACION,t.NOMBRECATEGORIA from CsnUser\Entity\Tiposestudio t WHERE t.ID in ('.$valores.')');
+        $recomendaciones = $queryReco->getArrayResult();
+        return new JsonModel($recomendaciones);
       }
     }
 
