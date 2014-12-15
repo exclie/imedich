@@ -139,7 +139,6 @@ class PacientesController extends AbstractActionController
               $IdAgenda = $agendaresult[0]['id'];
               $agenda = $objectManager->find('CsnUser\Entity\Agendas',$IdAgenda);
               $agenda->setPaciente($paciente);
-              $agenda->setTitle($paciente->getNOMBRE().' '.$paciente->getAPELLIDO_PATERNO().' '.$paciente->getAPELLIDO_MATERNO());
               $agenda->setPacientenr($paciente->getNOMBRE().' '.$paciente->getAPELLIDO_PATERNO().' '.$paciente->getAPELLIDO_MATERNO());
               $objectManager->merge($agenda);
               $objectManager->flush();

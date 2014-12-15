@@ -16,20 +16,22 @@
     } ?>
 <div class="col-lg-12">
     <h3 style="float:left">ESTUDIOS</h3>
+    <?php if($permiso) { ?>
     <div class="dropdown" style="float:right">
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
         <span class="glyphicon glyphicon-cog"> Opciones</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <?php if($permiso) { ?><li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="estudioModal()">Nuevo estudio</a></li><?php } ?>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="estudioModal()">Nuevo estudio</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/estudios/categorias">Categorías de estudio</a></li>
-        <?php if($permiso) { ?><li role="presentation" class="divider"></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/pacientes/pacientenuevo">Nuevo paciente</a></li><?php } ?>
+        <li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo $this->basePath() ?>/pacientes/pacientenuevo">Nuevo paciente</a></li>
         <li role="presentation" class="divider"></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agenda</a></li>
       </ul>
     </div>
+    <?php } ?>
 </div>
 <style>
     .fila:hover .gli{

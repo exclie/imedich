@@ -6,7 +6,7 @@ if (defined('RUNNING_FROM_ROOT')) {
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('Imedich.')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle('Medimagen.')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -54,7 +54,7 @@ if (defined('RUNNING_FROM_ROOT')) {
                 <div class="collapse navbar-collapse">
                     <?php if($this->identity()) { ?>
                     <ul class="nav navbar-nav">
-                        <li><a href="<?php echo $this->url('pacientes', array('action'=>'pacientenuevo')); ?>"><i class="fa fa-user"></i> Registrar paciente</a></li>
+                        <?php if($this->identity()->getRole()->getId() != 4 && $this->identity()->getRole()->getId() != 5 ) { ?><li><a href="<?php echo $this->url('pacientes', array('action'=>'pacientenuevo')); ?>"><i class="fa fa-user"></i> Registrar paciente</a></li><?php } ?>
                         <li><a href="<?php echo $this->url('estudios', array('action'=>'')) ?>"><i class="fa fa-stethoscope"></i> Estudios</a></li>
                         <li><a href="<?php echo $this->url('agenda'); ?>"><i class="fa fa-table"></i> Agenda</a></li>
                     </ul>

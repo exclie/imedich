@@ -11,7 +11,7 @@
                         <th>Paciente</th>
                         <th>Fecha</th>
                         <th width="40%">Estudio</th>
-                        <th>Total</th>
+                        <?php if($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4 ) { ?><th>Total</th> <?php } ?>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -27,7 +27,7 @@
                                     $total+= ($categoria['COSTO']*1.16);
                                     echo $categoria['NOMBRECATEGORIA'].', ';
                                 } ?></td>
-                            <td><?php echo '$ '.number_format($total,2); ?></td>
+                            <?php if($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4 ) { ?><td><?php echo '$ '.number_format($total,2); ?></td><?php } ?>
                             <td><?php if ($est['esNombre'] == 'En proceso'): ?>
                                 <span class="label label-griscafe">En proceso</span>
                             <?php endif; ?>
@@ -50,22 +50,22 @@
                                 <span class="label label-default">Agendado</span>
                             <?php endif ?>
 
-                            <?php if ($est[0]['PAGADO'] == 1) { ?>
+                            <?php if ($est[0]['PAGADO'] == 1 && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)) { ?>
                                 <span class="label label-azul" onclick="verPago(<?php echo $est[0]['ID'] ?>)" style="cursor:pointer">P</span>
-                            <?php } else if($est['DEPENDENCIA'] == 8 && $est['NOMBRE']) { ?>
+                            <?php } else if($est['DEPENDENCIA'] == 8 && $est['NOMBRE'] && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)) { ?>
                                 <span class="glyphicon glyphicon-usd" style="float:right;cursor:pointer;color:blue;margin-left:10px" onclick="pagoModal(<?php echo $est[0]['ID'] ?>)" id="iconoEntregar" title="Pagar estudio"></span>
                             <?php } ?>
-                                <?php if ($est['esID'] == 3): ?>
+                                <?php if ($est['esID'] == 3 && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)): ?>
                                     <span class="glyphicon glyphicon-ok" style="float:right;cursor:pointer;color:green;margin-left:10px" onclick="entregarEstudio(<?php echo $est[0]['ID'] ?>)" id="iconoEntregar" title="Entregar estudio"></span>
                                     
                                 <?php endif ?>
                                 <?php if ($est['esID'] != 8): ?>
                                     <span class="glyphicon glyphicon-folder-open" style="float:right;cursor:pointer;color:dodgerblue" id="iconoCarpeta" onclick="verestudio(<?php echo $est[0]['ID'] ?>)"></span>    
                                 <?php endif ?>
-                                <?php if ($est['NOMBRE'] && $est['esID'] === 8): ?>
+                                <?php if ($est['NOMBRE'] && $est['esID'] === 8 && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)): ?>
                                     <span class="glyphicon glyphicon-edit" style="float:right;cursor:pointer;color:dodgerblue" id="iconoEditar" onclick="editarEstudioModal(<?php echo $est[0]['ID'] ?>)"></span>    
                                 <?php endif ?>
-                                <?php if (!$est['NOMBRE'] && $est['esID'] === 8) { ?>
+                                <?php if (!$est['NOMBRE'] && $est['esID'] === 8 && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)) { ?>
                                     <span class="glyphicon glyphicon-edit" style="float:right;cursor:pointer;color:dodgerblue;margin-left:10px" id="iconoEditar" onclick="editarEstudioModal(<?php echo $est[0]['ID'] ?>)"></span>
                                     <a href="<?php echo $this->basePath() ?>/pacientes/pacientenuevo/<?php echo $est[0]['ID'] ?>"><span class="glyphicon glyphicon-user" style="float:right;cursor:pointer;color:dodgerblue" id="iconoRegistrar"></span> </a>   
                                 <?php } ?>
