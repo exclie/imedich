@@ -124,6 +124,8 @@ function guardarevento () {
 	var evento = $('#cFecha').val();
 	fin = evento+"T"+$('#hasta').val()+':00';
 	inicio = evento+"T"+$('#desde').val()+':00';
+	tel1 = $('#telefono1').val();
+	docenv = $('#cDoctor').val();
 	if(inicio < fin) {
 		$('#cFin').val(fin);
 		$('#cInicio').val(inicio);
@@ -131,10 +133,10 @@ function guardarevento () {
 		$('#cPacientenr').val(pacientenr);
 		var estudios = $('#sCategorias').val();
 		var edad = $('#cEdad').val();
-		if (pacientenr != '' && estudios != null && edad != '') {
+		if (pacientenr != '' && estudios != null && edad != '' && tel1 != '' && docenv != '') {
 			guardareventodrop();
 		} else {
-			alert('Los campos de Nombre de paciente, Edad y Estudios a realizar necesitan llenarse antes de poder guardar el evento.');
+			alert('Los campos de Nombre de paciente,Doctor que le envia, Edad,Telefono 1 y Estudios a realizar necesitan llenarse antes de poder guardar el evento.');
 		}
 	} else {
 		alert('La hora de inicio es mayor que la del final del evento. Es necesario tener una hora de inicio menor que la hora de finalización del evento.');

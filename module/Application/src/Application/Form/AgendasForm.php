@@ -230,7 +230,7 @@ class AgendasForm extends Form
                 } else {
                     $where = 'WHERE p.DEPENDENCIA = '.$id;
                 }
-                $query = $this->objectManager->createQuery("SELECT p FROM CsnUser\Entity\Tiposestudio p ");  
+                $query = $this->objectManager->createQuery("SELECT p FROM CsnUser\Entity\Tiposestudio p ".$where);  
                 $result = $query->getArrayResult();
                 $categorias = array();
                 foreach($result as $res) {

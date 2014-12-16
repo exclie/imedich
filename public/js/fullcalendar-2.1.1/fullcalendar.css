@@ -824,6 +824,7 @@ a.fc-more:hover {
 
 .fc-time-grid .fc-event {
 	position: absolute;
+	border-width: 3px;
 	z-index: 1; /* scope inner z-index's */
 }
 

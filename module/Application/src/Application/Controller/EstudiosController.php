@@ -412,12 +412,32 @@ class EstudiosController extends AbstractActionController
         $Estudio->setESTADO($objectManager->find('CsnUser\Entity\Estadosestudios', 1));
         $Estudio->setREVISION($this->request->getPost('REVISION'));
         if($idEstudio) {
+          $evento = $objectManager->getRepository('CsnUser\Entity\Agendas')->findOneBy(array('ESTUDIO' => $Estudio->getId()));
           if ($this->request->getPost('TIPOS')) {
+            $Estudio->getTipos()->clear();
+            if($evento){
+              $evento->setDEPENDENCIA($Estudio->getDEPENDENCIA());
+              $evento->setRefdocid($Estudio->getDOCTORENV());
+              $evento->setRefdoctor($Estudio->getDOCTORENV()->getNOMBRE().' '.$Estudio->getDOCTORENV()->getAPELLIDO1().' '.$Estudio->getDOCTORENV()->getAPELLIDO2());
+              $nombretipo = '';
+              $evento->getTipo()->clear();
+            }
             foreach ($this->request->getPost('TIPOS') as $tipo) {
               if (!$Estudio->getTipos()->contains($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0]))) {
                 $Estudio->addTIPO($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0]));
+                if($evento) {
+                  $nombretipo = $nombretipo.' '.$objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0])->getNOMBRECATEGORIA().';';
+                  if(!$evento->getTipo()->contains($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0])))
+                    $evento->getTipo()->add($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0]));
+                }
               }
-            } 
+            }
+            if($evento) {
+              $paciente = $objectManager->find('CsnUser\Entity\Pacientes',$this->request->getPost('PACIENTE'));
+              $nombrePaciente = $paciente->getNOMBRE().' '.$paciente->getAPELLIDO_PATERNO().' '.$paciente->getAPELLIDO_MATERNO();
+              $evento->setTitle($nombrePaciente.' ['.$Estudio->getDEPENDENCIA()->getNOMBREDEPENDENCIA().']: '.$nombretipo);
+              $evento->setPacientenr($nombrePaciente); 
+            }
           } 
         } else {
           foreach ($this->request->getPost('TIPOS') as $tipo) {
@@ -428,11 +448,15 @@ class EstudiosController extends AbstractActionController
         $idEst = $this->request->getPost('ID');
         if($idEst) {
           $Estudio->setId($idEst);
-          $objectManager->merge($Estudio);  
+          $objectManager->merge($Estudio);
+          if($evento) {
+            $objectManager->merge($evento);
+          }  
         } else {
           $objectManager->persist($Estudio);
         }
         $objectManager->flush();
+
         return new JsonModel();
       } else {
         return new ViewModel($return);

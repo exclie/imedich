@@ -146,6 +146,7 @@ class AgendaController extends AbstractActionController
               $estudio->setPaciente(null);
             }
             if($this->request->getPost('tipo')) {
+              $estudio->getTipos()->clear();
               foreach ($this->request->getPost('tipo') as $tipo) {
                 if (!$estudio->getTipos()->contains($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0]))) {
                   $estudio->addTIPO($objectManager->find('CsnUser\Entity\Tiposestudio',$tipo[0]));
