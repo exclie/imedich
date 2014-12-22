@@ -9,7 +9,7 @@
 
      echo $this->headScript()
             ->appendFile($this->basePath() . '/public/js/transition.js');
-
+$role = $this->identity()->getRole()->getId();
 ?>
 <div class="col-sm-12" style="float:none">
 	<?php echo $this->form()->openTag($form); ?>
@@ -20,13 +20,22 @@
 	<div class="col-sm-6" style="float:none">
 		<?php echo $this->formRow($form->get('FECHACADUCIDAD')); ?>
 	</div>
+	<div class="col-sm-6" style="float:none">
+		<?php echo $this->formRow($form->get('PROVEEDOR')); ?>
+	</div>
+	<div class="col-sm-6" style="float:none">
+		<?php echo $this->formRow($form->get('PRECIO')); ?>
+	</div>
 	<div class="col-sm-12" style="float:none">
 		<?php echo $this->formRow($form->get('CANTIDAD')); ?>
 	</div>
 	<div class="col-sm-12" style="float:none">
 		<?php echo $this->formRow($form->get('CANTIDADMIN')); ?>
 	</div>
-	
+	<div class="col-sm-6" style="float:none;margin-top:10px;<?php if($role != 7){ echo "display:hidden";} ?>">
+		<label><font color="red">Activo:</font></label>
+		<?php echo $this->formRow($form->get('ACTIVO')); ?>
+	</div>
 	<?php echo $this->form()->closeTag(); ?>
 </div>
 

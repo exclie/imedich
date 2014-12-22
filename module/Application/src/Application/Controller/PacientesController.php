@@ -104,6 +104,21 @@ class PacientesController extends AbstractActionController
       return $resultado;
     }
 
+    public function verpacienteAction() {
+      $em = $this->getObjectManager();
+      $idpaciente = $this->params()->fromRoute('id');
+      if($idpaciente){
+        $queryPaciente = $em->createQuery("SELECT p,d.ID as DISCAPACIDAD,e.ID as ESTADO,g.ID as GRUPO_ETNICO,
+          m.ID as MUNICIPIO,n.ID as NIVEL_SOCIOECONOMICO,r.ID as RELIGION,t.ID as TIPO_SANGUINEO,v.ID as VIVIENDA,
+          u.firstName,u.lastName,u.apellidoMaterno,de,dep FROM CsnUser\Entity\Pacientes p 
+          LEFT JOIN p.DISCAPACIDAD d LEFT JOIN p.ESTADO e LEFT JOIN p.GRUPO_ETNICO g 
+          LEFT JOIN p.MUNICIPIO m LEFT JOIN p.NIVEL_SOCIOECONOMICO n LEFT JOIN p.RELIGION r 
+          LEFT JOIN p.TIPO_SANGUINEO t LEFT JOIN p.VIVIENDA v LEFT JOIN p.USUARIO u LEFT JOIN p.DEPENDENCIAS de LEFT JOIN de.DEPENDENCIA dep WHERE p.ID = ".$idpaciente);          
+        $paciente = $queryPaciente->getArrayResult();
+      }
+      return new JsonModel($paciente);
+    }
+
     public function pacientenuevoAction() {
       $result = null;
       $idEstudio = $this->params()->fromRoute('id');
@@ -126,9 +141,26 @@ class PacientesController extends AbstractActionController
             $data = $form->getData(FormInterface::VALUES_AS_ARRAY);
             $paciente = $hydrator->hydrate($data, $paciente);
             $paciente->setFECHA_REGISTRO(new \DateTime()); 
-
-            $objectManager->persist($paciente);
-            $objectManager->flush();
+            $paciente->setUSUARIO($objectManager->find('CsnUser\Entity\User', $this->identity()->getId()));                   
+            if($this->request->getPost('ins')){
+              $instis = json_decode($this->request->getPost('ins'),true);
+              $paciente->getDEPENDENCIAS()->clear();
+              foreach($instis as $ins){
+                $padep = new Pacientesdependencias();
+                $padep->setDEPENDENCIA($objectManager->find('CsnUser\Entity\Dependencias',$ins['IDINSTITUCION']));
+                $padep->setAFILIACION($ins['AFILIACION']);
+                $objectManager->persist($padep);                
+                $objectManager->flush();
+                $paciente->getDEPENDENCIAS()->add($objectManager->find('CsnUser\Entity\Pacientesdependencias',$padep->getId()));
+              }
+            }
+            if($this->request->getPost('ID_PACIENTE')) {
+              $paciente->setId($this->request->getPost('ID_PACIENTE'));
+              $objectManager->merge($paciente);
+            } else {
+              $objectManager->persist($paciente);
+            } 
+            $objectManager->flush();  
             if($this->request->getPost('IdEstudio')) {
               $estudio = $objectManager->find('CsnUser\Entity\Estudios', $this->request->getPost('IdEstudio'));
               $estudio->setPACIENTE($objectManager->find('CsnUser\Entity\Pacientes', $paciente->getId()));
@@ -143,22 +175,12 @@ class PacientesController extends AbstractActionController
               $objectManager->merge($agenda);
               $objectManager->flush();
             }
-            if($this->request->getPost('ins')){
-              $instis = json_decode($this->request->getPost('ins'),true);
-              foreach($instis as $ins){
-                $padep = new Pacientesdependencias();
-                $padep->setPACIENTE($objectManager->find('CsnUser\Entity\Pacientes',$paciente->getID()));
-                $padep->setDEPENDENCIA($objectManager->find('CsnUser\Entity\Dependencias',$ins['IDINSTITUCION']));
-                $padep->setAFILIACION($ins['AFILIACION']);
-                $objectManager->persist($padep);
-                $objectManager->flush();
-              }
-            }
             $result = 1;
           } else {
             $result = 0;
+            $error = $form->getMessages();
           }
-          $data = array('resultado' => $result);
+          $data = array('resultado' => $result,'error' => $error);
           return new JsonModel($data);
       } else {
         $data = array('form' => $form,'result' => $result,'dependencias' => $dependencias);

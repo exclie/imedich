@@ -10,15 +10,19 @@
 	<table class="table" id="tablaInventario">
 		<thead>
 			<th>Material</th>
-			<th>Fecha de caducidad</th>
-			<th>Cantidad (mínima)</th>
+			<th>Caducidad</th>
+			<th>Proveedor</th>
+			<th>Precio</th>
+			<th>Cantidad (mín.)</th>
 			<th>Cantidad</th>
 		</thead>
 		<tbody>
 			<?php foreach ($material as $mat):  ?>
 				<tr class="fila">
-					<td><?php echo $mat['MATERIAL'] ?></td>
-					<td><?php if(date_format($mat['FECHACADUCIDAD'],'d-m-Y') == '30-11--0001') { echo '00-00-0000'; } else {echo date_format($mat['FECHACADUCIDAD'],'d-m-Y');} ?></td>
+					<td> <font color="<?php if($mat['ACTIVO'] == 1) { echo "blue"; } else {echo "red";} ?>"><?php echo $mat['MATERIAL'] ?></font></td>
+					<td><?php if($mat['FECHACADUCIDAD']) { if(date_format($mat['FECHACADUCIDAD'],'d-m-Y') == '30-11--0001') { echo '00-00-0000'; } else {echo date_format($mat['FECHACADUCIDAD'],'d-m-Y');} } ?></td>
+					<td><?php echo $mat['PROVEEDOR'] ?></td>
+					<td><?php echo '$ '.number_format($mat['PRECIO'],2); ?></td>
 					<td><?php echo $mat['CANTIDADMIN'] ?></td>
 					<td><?php if($mat['CANTIDAD'] <= $mat['CANTIDADMIN'] && $mat['CANTIDAD'] > 0){
 							echo '<span class="label label-warning">'.$mat['CANTIDAD'].'</span>';

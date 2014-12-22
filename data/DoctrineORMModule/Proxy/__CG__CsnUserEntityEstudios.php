@@ -64,10 +64,10 @@ class Estudios extends \CsnUser\Entity\Estudios implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'ID', 'PACIENTE', 'FECHA', 'TIPO', 'DOCTOR', 'ESTADO');
+            return array('__isInitialized__', 'ID', 'PACIENTE', 'FECHA', 'PACIENTE_NR', 'TIPOS', 'DOCTOR', 'ESTADO', 'USUARIO', 'DOCTORENV', 'EVENTO', 'REVISION', 'INTERPRETACION', 'PAGADO', 'PDFTOKEN', 'FOLIORECETA', 'FECHARECETA', 'DEPENDENCIA', 'RECEPTOR');
         }
 
-        return array('__isInitialized__', 'ID', 'PACIENTE', 'FECHA', 'TIPO', 'DOCTOR', 'ESTADO');
+        return array('__isInitialized__', 'ID', 'PACIENTE', 'FECHA', 'PACIENTE_NR', 'TIPOS', 'DOCTOR', 'ESTADO', 'USUARIO', 'DOCTORENV', 'EVENTO', 'REVISION', 'INTERPRETACION', 'PAGADO', 'PDFTOKEN', 'FOLIORECETA', 'FECHARECETA', 'DEPENDENCIA', 'RECEPTOR');
     }
 
     /**
@@ -209,6 +209,28 @@ class Estudios extends \CsnUser\Entity\Estudios implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
+    public function getEVENTO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEVENTO', array());
+
+        return parent::getEVENTO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setEVENTO($EVENTO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setEVENTO', array($EVENTO));
+
+        return parent::setEVENTO($EVENTO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setPACIENTE($PACIENTE)
     {
 
@@ -242,23 +264,45 @@ class Estudios extends \CsnUser\Entity\Estudios implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getTIPO()
+    public function getTIPOS()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTIPO', array());
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTIPOS', array());
 
-        return parent::getTIPO();
+        return parent::getTIPOS();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setTIPO($TIPO)
+    public function addTIPOS(\Doctrine\Common\Collections\Collection $TIPOS)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTIPO', array($TIPO));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTIPOS', array($TIPOS));
 
-        return parent::setTIPO($TIPO);
+        return parent::addTIPOS($TIPOS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addTIPO(\CsnUser\Entity\Tiposestudio $CATEGORIA)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addTIPO', array($CATEGORIA));
+
+        return parent::addTIPO($CATEGORIA);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeTIPO(\CsnUser\Entity\Tiposestudio $CATEGORIA)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeTIPO', array($CATEGORIA));
+
+        return parent::removeTIPO($CATEGORIA);
     }
 
     /**
@@ -303,6 +347,248 @@ class Estudios extends \CsnUser\Entity\Estudios implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setESTADO', array($ESTADO));
 
         return parent::setESTADO($ESTADO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUSUARIO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUSUARIO', array());
+
+        return parent::getUSUARIO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUSUARIO($USUARIO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUSUARIO', array($USUARIO));
+
+        return parent::setUSUARIO($USUARIO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDOCTORENV()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDOCTORENV', array());
+
+        return parent::getDOCTORENV();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDOCTORENV($DOCTORENV)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDOCTORENV', array($DOCTORENV));
+
+        return parent::setDOCTORENV($DOCTORENV);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getINTERPRETACION()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getINTERPRETACION', array());
+
+        return parent::getINTERPRETACION();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setINTERPRETACION($INTERPRETACION)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setINTERPRETACION', array($INTERPRETACION));
+
+        return parent::setINTERPRETACION($INTERPRETACION);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getREVISION()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getREVISION', array());
+
+        return parent::getREVISION();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setREVISION($REVISION)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setREVISION', array($REVISION));
+
+        return parent::setREVISION($REVISION);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPDFTOKEN()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPDFTOKEN', array());
+
+        return parent::getPDFTOKEN();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPDFTOKEN($PDFTOKEN)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPDFTOKEN', array($PDFTOKEN));
+
+        return parent::setPDFTOKEN($PDFTOKEN);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPACIENTENR()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPACIENTENR', array());
+
+        return parent::getPACIENTENR();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPACIENTENR($PACIENTE_NR)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPACIENTENR', array($PACIENTE_NR));
+
+        return parent::setPACIENTENR($PACIENTE_NR);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFOLIORECETA()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFOLIORECETA', array());
+
+        return parent::getFOLIORECETA();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFOLIORECETA($FOLIORECETA)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFOLIORECETA', array($FOLIORECETA));
+
+        return parent::setFOLIORECETA($FOLIORECETA);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFECHARECETA()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFECHARECETA', array());
+
+        return parent::getFECHARECETA();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFECHARECETA($FECHARECETA)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFECHARECETA', array($FECHARECETA));
+
+        return parent::setFECHARECETA($FECHARECETA);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDEPENDENCIA()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDEPENDENCIA', array());
+
+        return parent::getDEPENDENCIA();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDEPENDENCIA($DEPENDENCIA)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDEPENDENCIA', array($DEPENDENCIA));
+
+        return parent::setDEPENDENCIA($DEPENDENCIA);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRECEPTOR()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRECEPTOR', array());
+
+        return parent::getRECEPTOR();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRECEPTOR($RECEPTOR)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRECEPTOR', array($RECEPTOR));
+
+        return parent::setRECEPTOR($RECEPTOR);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPAGADO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPAGADO', array());
+
+        return parent::getPAGADO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPAGADO($PAGADO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPAGADO', array($PAGADO));
+
+        return parent::setPAGADO($PAGADO);
     }
 
 }

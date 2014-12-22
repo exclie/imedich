@@ -30,3 +30,7 @@ vendor/dompdf/dompdf/.gitmodules
 vendor/tecnick.com/tcpdf/
 
 vendor/webino/webino-image-thumb/
+
+*.jpg
+
+*.jpeg

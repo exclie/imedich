@@ -7,17 +7,17 @@ if (defined('RUNNING_FROM_ROOT')) {
 <div class="row">
   <div class="col-sm-3">
     <label>Fecha de la receta:</label>
-    <input type="date" class="form-control" id="fechareceta">
+    <input type="date" class="form-control" id="fechareceta" value="<?php echo $estado[0]['FECHARECETA']; ?>">
   </div>
   <div class="col-sm-3">
     <label># de Folio:</label>
-    <input type="text" class="form-control" id="folioreceta">
+    <input type="text" class="form-control" id="folioreceta" value="<?php echo $estado[0]['FOLIORECETA']; ?>">
   </div>
   <div class="col-sm-1">
     <button type="button" class="btn btn-default" style="margin-top:25px;" id="guardarInfoReceta">OK</button>
   </div>
 </div>
-<div class="fotorama" id="divfoto" data-nav="thumbs" style="margin-top:12px">
+<div class="fotos" id="divfoto" data-nav="thumbs" style="margin-top:12px" data-width="100%" data-ratio="800/600">
   <?php if($imagenes) {
           foreach($imagenes as $i) { $foto = explode('.',$i['IMAGEN']);?>
             <a href="<?php echo $this->basePath().'/imagenes/Estudios/'.$idEstudio.'/Receta/'.$i['IMAGEN']?>">
@@ -86,5 +86,6 @@ $(document).ready(function(){
         });
   };
   $('#guardarInfoReceta').on('click',guardarinfo);
+  $('.fotos').fotorama();
 });
 </script>

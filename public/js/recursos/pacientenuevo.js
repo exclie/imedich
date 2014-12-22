@@ -2,13 +2,6 @@
 	 $('#dEstados option[value=8]').attr('selected','selected');
 	 $('#dEstados').chosen({width: "95%"});
 	 $('#dMunicipios').chosen({width: "95%"});
-	 $('#dReligion').chosen({width: "95%"});
-	 $('#dNivel').chosen({width: "95%"});
-	 $('#dDiscapacidad').chosen({width: "95%"});
-	 $('#dGrupoetnico').chosen({width: "95%"});
-	 $('#dTipossanguineos').chosen({width: "95%"});
-	 $('#dVivienda').chosen({width: "95%"});
-	 $('#sCliente').chosen({width: "95%"});
 	 municipios(8);
 	});
 	function municipios (id) {
@@ -19,6 +12,17 @@
 					$('#dMunicipios').append("<option value='"+data[i].ID+"' id='Municipio"+data[i].ID+"'>"+data[i].NOMBRE+"</option>");
 				}
 			$("#dMunicipios").val(233);
+			$("#dMunicipios").trigger("chosen:updated");
+          });
+	}
+	function municipios3 (id,municipio) {
+		$.post('/imedich/pacientes/municipios', {municipioid: id},
+          function (data) {
+          	$('#dMunicipios').empty();
+          	for(i = 0; i < data.length; i++){
+					$('#dMunicipios').append("<option value='"+data[i].ID+"' id='Municipio"+data[i].ID+"'>"+data[i].NOMBRE+"</option>");
+				}
+			$("#dMunicipios").val(municipio);
 			$("#dMunicipios").trigger("chosen:updated");
           });
 	}
@@ -40,8 +44,8 @@
           	for(i = 0; i < data.length; i++){
 					$('#sMunicipios').append("<option value='"+data[i].ID+"' id='Municipio"+data[i].ID+"'>"+data[i].NOMBRE+"</option>");
 				}
-			$("#sMunicipios").val(233);
-			$("#sMunicipios").trigger("chosen:updated");
+			$("#dMunicipios").val(233);
+			$("#dMunicipios").trigger("chosen:updated");
           });
 	}
 	function verificar_campo(campo) {

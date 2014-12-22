@@ -138,13 +138,13 @@ class EstudiosController extends AbstractActionController
     }
     public function estudiodetallesAction() {
       $idEstudio = $this->params()->fromRoute('id');
-      $query = $this->getObjectManager()->createQuery("SELECT e,t,es.ID as ESTADO,d.NOMBRE as DOCTORENV,d.ID as IDDOCTOR,p.ID as PACIENTE FROM CsnUser\Entity\Estudios e JOIN e.PACIENTE p LEFT JOIN e.TIPOS t LEFT JOIN e.ESTADO es LEFT JOIN e.DOCTORENV d WHERE e.ID = ".$idEstudio);
+      $query = $this->getObjectManager()->createQuery("SELECT e,t,es.ID as ESTADO,d.NOMBRE as DOCTORENV,d.APELLIDO1,d.APELLIDO2,d.ID as IDDOCTOR,p.ID as PACIENTE FROM CsnUser\Entity\Estudios e JOIN e.PACIENTE p LEFT JOIN e.TIPOS t LEFT JOIN e.ESTADO es LEFT JOIN e.DOCTORENV d WHERE e.ID = ".$idEstudio);
       $queryListaMateriales = $this->getObjectManager()->createQuery("SELECT m.ID,m.MATERIAL FROM CsnUser\Entity\Inventario m");
       $listaMateriales = $queryListaMateriales->getArrayResult();
       $estudio = $query->getArrayResult();
       $categorias = array();
       $contador = 0;
-      if($estudio[0]['ESTADO'] == 2 || $estudio[0]['ESTADO'] == 3 || $estudio[0]['ESTADO'] == 4) {
+      if($estudio[0]['ESTADO'] == 2 || $estudio[0]['ESTADO'] == 3 || $estudio[0]['ESTADO'] == 4 || $estudio[0]['ESTADO'] == 9 ) {
         $queryString = "SELECT m,i.ID as IDMAT,i.MATERIAL FROM CsnUser\Entity\EstudioMaterial m LEFT JOIN m.INVENTARIO i WHERE m.ESTUDIO = ".$estudio[0][0]['ID']." AND m.CATEGORIA = ";
       } else {
         $queryString = "SELECT m,i.ID as IDMAT,i.MATERIAL FROM CsnUser\Entity\Inventarioestudio m LEFT JOIN m.INVENTARIO i WHERE m.CATEGORIA = 1";
@@ -164,7 +164,7 @@ class EstudiosController extends AbstractActionController
       $paciente = $queryPaciente->getArrayResult();
       $queryMedico = $this->getObjectManager()->createQuery("SELECT d,e.ESPECIALIDAD FROM CsnUser\Entity\Doctores d LEFT JOIN d.ESPECIALIDAD e WHERE d.ID = ".$estudio[0]['IDDOCTOR']);
       $medico = $queryMedico->getArrayResult();
-      return new ViewModel(array('estudio' => $estudio,'paciente' => $paciente,'categorias' => $categorias,'listaMateriales' => $listaMateriales,'medico' => $estudio[0]['DOCTORENV'],'especialidad' => $medico[0]['ESPECIALIDAD']));
+      return new ViewModel(array('estudio' => $estudio,'paciente' => $paciente,'categorias' => $categorias,'listaMateriales' => $listaMateriales,'medico' => $estudio[0]['DOCTORENV'].' '.$estudio[0]['APELLIDO1'].' '.$estudio[0]['APELLIDO2'],'especialidad' => $medico[0]['ESPECIALIDAD']));
     }
     public function imagenesestudioAction() {
       if($this->request->isPost()){
@@ -532,13 +532,18 @@ class EstudiosController extends AbstractActionController
 
     public function interpretacionAction() {
       if ($this->request->isPost()) {
+        $role = $this->identity()->getRole()->getId();
         $this->layout('layout/vacio');
         $idEstudio = $this->request->getPost('estudio');
         $interpretacion = $this->request->getPost('inter');
         $objectManager = $this->getObjectManager();
         $estudio = $objectManager->find('CsnUser\Entity\Estudios',$idEstudio);
         $estudio->setINTERPRETACION($interpretacion);
-        $estudio->setESTADO($objectManager->find('CsnUser\Entity\Estadosestudios',3));
+        if($role == 4) {
+          $estudio->setESTADO($objectManager->find('CsnUser\Entity\Estadosestudios',3));  
+        } else if ($role == 5) {
+          $estudio->setESTADO($objectManager->find('CsnUser\Entity\Estadosestudios',9));  
+        }
         $estudio->setPDFTOKEN(md5(uniqid(mt_rand(), true)));
         $nombrePaciente = $estudio->getPACIENTE()->getNOMBRE().' '.$estudio->getPACIENTE()->getAPELLIDO_PATERNO().' '.$estudio->getPACIENTE()->getAPELLIDO_MATERNO();
         $emailPaciente = $estudio->getPACIENTE()->getEMAIL();
@@ -567,8 +572,7 @@ class EstudiosController extends AbstractActionController
       $rsm->addFieldResult('p','ID','ID');
       $rsm->addFieldResult('p','NOMBRE','NOMBRE');
       $rsm->addFieldResult('p','APELLIDO_PATERNO','APELLIDO_PATERNO');
-      $rsm->addFieldResult('p','APELLIDO_MATERNO','APELLIDO_MATERNO');
-      
+      $rsm->addFieldResult('p','APELLIDO_MATERNO','APELLIDO_MATERNO');      
       $rsm->addFieldResult('p','FECHA_NACIMIENTO','FECHA_NACIMIENTO');
       $dato = $this->getRequest()->getQuery('term');
       $query = $this->getObjectManager()->createNativeQuery("SELECT p.* FROM Pacientes p WHERE CONCAT(p.NOMBRE,' ',p.APELLIDO_PATERNO,' ',p.APELLIDO_MATERNO) like '%$dato%'", $rsm);
@@ -576,7 +580,9 @@ class EstudiosController extends AbstractActionController
       foreach($pacientes as $pac) {
         $json[] = array('id' => $pac['ID'],'label' => $pac['NOMBRE'].' '.$pac['APELLIDO_PATERNO'].' '.$pac['APELLIDO_MATERNO'].' ['.date_format($pac['FECHA_NACIMIENTO'],'Y/m/d').']',
         'value' => $pac['NOMBRE'].' '.$pac['APELLIDO_PATERNO'].' '.$pac['APELLIDO_MATERNO'],
-        'name' => 'pac'.$pac['ID']);
+        'name' => 'pac'.$pac['ID'],
+        'fecha' => date_format($pac['FECHA_NACIMIENTO'],'Y-m-d'),
+        'idPac' => $pac['ID']);
       }
       $resultado = new JsonModel($json);
       return $resultado;
@@ -605,8 +611,8 @@ class EstudiosController extends AbstractActionController
         $idPaciente = $this->request->getPost('idPaciente');
         $idEstudio = $this->request->getPost('idEstudio');
         $this->layout($this->vacio);
-        $query = $this->getObjectManager()->createQuery("SELECT i FROM CsnUser\Entity\Estudioreceta i WHERE i.PACIENTE = $idPaciente AND i.ESTUDIO = $idEstudio");
-        $queryEstudio = $this->getObjectManager()->createQuery("SELECT es.ID as ESTADO FROM CsnUser\Entity\Estudios e JOIN e.ESTADO es WHERE e.ID = $idEstudio");
+        $query = $this->getObjectManager()->createQuery("SELECT i FROM CsnUser\Entity\Estudioreceta i WHERE i.ESTUDIO = $idEstudio");
+        $queryEstudio = $this->getObjectManager()->createQuery("SELECT es.ID as ESTADO,e.FOLIORECETA,e.FECHARECETA FROM CsnUser\Entity\Estudios e JOIN e.ESTADO es WHERE e.ID = $idEstudio");
         $queryPaciente = $this->getObjectManager()->createQuery("SELECT padep,dep.NOMBREDEPENDENCIA FROM CsnUser\Entity\Pacientesdependencias padep JOIN padep.DEPENDENCIA dep WHERE padep.PACIENTE = $idPaciente");
         $imagenes = $query->getArrayResult();
         $estado = $queryEstudio->getArrayResult();

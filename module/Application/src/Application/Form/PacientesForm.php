@@ -21,7 +21,10 @@ class PacientesForm extends Form implements InputFilterProviderInterface
 
         $this->add(array(
             'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'ID_PACIENTE'
+            'name' => 'ID_PACIENTE',
+            'attributes' => array(
+                'id' => 'cIdpaciente'
+            ),
         ));
         $this->add(array(
             'type' => 'Zend\Form\Element\Hidden',
@@ -115,7 +118,7 @@ class PacientesForm extends Form implements InputFilterProviderInterface
             ),
             'attributes' => array(
                 'class' => 'Input form-control',
-                'id' => 'cApma',
+                'id' => 'cOcupacion',
                 'onblur' => 'verificar_campo(this)',
             ),
         ));
@@ -245,17 +248,6 @@ class PacientesForm extends Form implements InputFilterProviderInterface
             ),
         ));
         $this->add(array(
-            'type'    => 'Zend\Form\Element\Text',
-            'name'    => 'AFILIACION',
-            'options' => array(
-                'label' => '# Derechohabiente: '
-            ),
-            'attributes' => array(
-                'class' => 'Input form-control',
-                'id' => 'cAfiliacion',
-            ),
-        ));
-        $this->add(array(
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'name' => 'DISCAPACIDAD',
             'options' => array(
@@ -331,19 +323,7 @@ class PacientesForm extends Form implements InputFilterProviderInterface
                 'id' => 'dVivienda',
             ),
         ));
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Select',
-            'name' => 'CLIENTE',
-            'tabindex' =>2,
-            'options' => array(
-                    'label' => 'Persona fiscal:',
-                    'value_options' => $this->getClientesData(),
-            ),
-            'attributes' => array(
-                'class' => 'form-control dropdown',
-                'id' => 'sCliente',
-            ),
-        ));
+        
         $this->add(array(
             'type' => 'DoctrineModule\Form\Element\ObjectSelect',
             'name' => 'GRUPO_ETNICO',
@@ -431,24 +411,6 @@ class PacientesForm extends Form implements InputFilterProviderInterface
                                 array(  'name'      =>  'StripTags'),
                                 array(  'name'      =>  'StringTrim'),
                             ),
-                            'validators'    => array(
-                                array(
-                                    'name'  => 'StringLength',
-                                    'options' => array(
-                                        'encoding'  =>  'UTF-8',
-                                        'min'       => 1,
-                                        'max'       => 100,
-                                    ),
-                                ),
-                                array(
-                                'name' => 'Regex',
-                                'options' => array(
-                                    'pattern' => '^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}^',
-                                    'messages' => array(
-                                        'regexNotMatch' => "Curp inválida.",
-                                    ),
-                                ),
-                            )),
             ),
             
         );

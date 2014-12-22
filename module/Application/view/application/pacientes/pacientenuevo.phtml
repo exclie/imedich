@@ -26,6 +26,7 @@
 		<div class="alert alert-success" role="alert">¡Paciente creado exitosamente!</div>
 	<?php } ?>
 	<div class="contenedor" style="margin-top:25px">
+		<span><font color="green" id="modo">Modo: Nuevo paciente</font></span>
 		<div class="panel-body">
 		<?php echo $this->form()->openTag($form); ?>
 		<?php echo $this->formRow($form->get('ID_PACIENTE')); ?>
@@ -130,15 +131,6 @@
 						<div class="form-element col-lg-3">
 							<?php echo $this->formRow($form->get('RFC')) ?>
 						</div>
-						<div class="form-element col-lg-3">
-							<?php echo $this->formRow($form->get('CLIENTE')) ?>
-						</div>
-						<div class="form-element col-lg-3">
-							<?php echo $this->formRow($form->get('AFILIACION')) ?>
-						</div>
-						<div class="form-element col-lg-2" style="margin-top:25px">
-							<button type="button" class="btn btn-warning" id="bAgregarcliente" onclick="clientesmodal()">Agregar cliente</button>
-						</div>
 				</div>
 			</div>
 			<div class="col-sm-12">
@@ -234,6 +226,7 @@
           terms.pop();
           // add the selected item
           terms.push( ui.item.value );
+          ponerdatosPaciente(ui.item.idPac);
           // add placeholder to get the comma-and-space at the end
           terms.push( "" );
           this.value = "";
@@ -261,6 +254,65 @@
             }
     	});
 	}
+	function ponerdatosPaciente(id) {
+		$('#sDependencias option').prop('disabled',false);
+		var numdep = 0;
+		var depen = '';
+		var num = '';
+		$.ajax({
+            type: "GET",
+            url: "<?php echo $this->basePath() ?>/pacientes/verpaciente/"+id,
+            dataType: "json",
+            success: function(data) {
+            	var fecha = data[0][0].FECHA_NACIMIENTO.date;
+            	fecha = fecha.split(" ");
+            	fecha = fecha[0];
+            	$("#modo")
+            			.text("Modo edición de paciente: "+data[0][0].NOMBRE+' '+data[0][0].APELLIDO_PATERNO+' '+
+            				data[0][0].APELLIDO_MATERNO+' (Última modificación: '+data[0].firstName+' '+data[0].lastName+' '+data[0].apellidoMaterno+')').css("color","blue");
+            	console.log(data);            	
+               	$('#cIdpaciente').val(data[0][0].ID);
+               	$('#cNombre').val(data[0][0].NOMBRE);
+               	$('#cCurp').val(data[0][0].CURP);
+               	$('#cRfc').val(data[0][0].RFC);
+               	$('#cAppa').val(data[0][0].APELLIDO_PATERNO);
+               	$('#cApma').val(data[0][0].APELLIDO_MATERNO);
+               	$('#sSexo').val(data[0][0].SEXO);
+               	ocultar();
+               	$('#cOcupacion').val(data[0][0].OCUPACION);
+               	$('#sEmbarazo').val(data[0][0].EMBARAZO);
+				$('#cFechaNacimiento').val(fecha);
+				$('#cCalle').val(data[0][0].CALLE);
+				$('#cEmail').val(data[0][0].EMAIL);
+				$('#cNumex').val(data[0][0].NUMERO_EXT);
+				$('#cNumin').val(data[0][0].NUMERO_INT);
+				$('#cCodigo').val(data[0][0].CODIGO_POSTAL); 
+				$('#cTelefono').val(data[0][0].TELEFONO_1);				
+				$('#dDiscapacidad').val(data[0].DISCAPACIDAD);
+				$('#dTipossanguineos').val(data[0].TIPO_SANGUINEO);
+				$('#dEstados').val(data[0].ESTADO);
+				municipios3(data[0].ESTADO,data[0].MUNICIPIO);							
+				$('#dVivienda').val(data[0].VIVIENDA);
+				$('#sCliente').val(data[0].CLIENTE);
+				$('#dGrupoetnico').val(data[0].GRUPO_ETNICO);
+				$('#dNivel').val(data[0].NIVEL_SOCIOECONOMICO);
+				$('#dReligion').val(data[0].RELIGION);
+				$("#dEstados").trigger("chosen:updated");
+				$('#tablainstitucion tbody').empty();
+				$.each(data[0][0].DEPENDENCIAS,function(key,value){					
+					numdep = value.DEPENDENCIA.ID;
+					depen = value.DEPENDENCIA.NOMBREDEPENDENCIA;
+					$('#sDependencias option[value="'+numdep+'"]').prop('disabled',true);
+					num = value.AFILIACION;
+					$('#tablainstitucion tbody').append('<tr id="'+numdep+'" idins="'+numdep+'" afilia="'+num+'"><td>'+depen+'</td><td>'+num+'<span class="glyphicon glyphicon-remove" style="color:crimson;float:right;cursor:pointer"'+' onclick="borrarFila(\''+numdep+'\')"></span></td></tr>');
+				});
+				document.getElementById('sDependencias').selectedIndex = -1;                            
+            },
+            error: function(){
+                  alert('Ocurrió un error, inténtelo más tarde.');
+            }
+    	});
+	}
 	function guardarPaciente () {
 		var institus = [];
 		var tabla = document.getElementById('tablainstitucion');
@@ -276,7 +328,11 @@
               data: datastring,
               success: function(data) {
               	if(data.resultado == 1){
-              		alert('Paciente creado');
+              		if($('#cIdpaciente').val() != '' && $('#cIdpaciente').val() != null){
+              			alert('Paciente modificado');	
+              		} else {
+              			alert('Paciente creado');	
+              		}
               	} else {
               		 alert('Paciente no creado');
               	}
@@ -288,12 +344,16 @@
 	}
 	function agregardependencia () {
 		var numdep = $('#sDependencias').val();
-		var depen = $('#sDependencias option:selected').text();
-		$('#sDependencias option:selected').prop('disabled',true);
 		var num = $('#cAfiliacion1').val();
-		$('#tablainstitucion tbody').append('<tr id="'+numdep+'" idins="'+numdep+'" afilia="'+num+'"><td>'+depen+'</td><td>'+num+'<span class="glyphicon glyphicon-remove" style="color:crimson;float:right;cursor:pointer"'+' onclick="borrarFila(\''+numdep+'\')"></span></td></tr>');
+		if(numdep){
+			var depen = $('#sDependencias option:selected').text();
+			$('#sDependencias option:selected').prop('disabled',true);
+			$('#tablainstitucion tbody').append('<tr id="'+numdep+'" idins="'+numdep+'" afilia="'+num+'"><td>'+depen+'</td><td>'+num+'<span class="glyphicon glyphicon-remove" style="color:crimson;float:right;cursor:pointer"'+' onclick="borrarFila(\''+numdep+'\')"></span></td></tr>');
+			document.getElementById('sDependencias').selectedIndex = -1;			
+		}
 	}
 	function borrarFila (fila) {
+		$('#sDependencias option[value="'+fila+'"]').prop('disabled',false);
 		$('#'+fila).remove();
 	}
 </script>

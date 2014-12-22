@@ -42,31 +42,42 @@ class InventarioController extends AbstractActionController
       if($id){
         $queryMaterial = $objectManager->createQuery('SELECT i FROM CsnUser\Entity\Inventario i WHERE i.ID = '.$id);
         $material = $queryMaterial->getArrayResult();
+        $form->get('ID')->setAttributes(array('value' => $material[0]['ID']));
         $form->get('MATERIAL')->setAttributes(array('value' => $material[0]['MATERIAL']));
         $form->get('CANTIDAD')->setAttributes(array('value' => $material[0]['CANTIDAD']));
         $form->get('CANTIDADMIN')->setAttributes(array('value' => $material[0]['CANTIDADMIN']));
+        $form->get('PROVEEDOR')->setAttributes(array('value' => $material[0]['PROVEEDOR']));
+        $form->get('ACTIVO')->setAttributes(array('checked' => $material[0]['ACTIVO']));
+        $form->get('PRECIO')->setAttributes(array('value' => $material[0]['PRECIO']));
         $form->get('FECHACADUCIDAD')->setAttributes(array('value' => $material[0]['FECHACADUCIDAD']));
         $form->get('ID')->setAttributes(array('value' => $material[0]['ID']));
       }
       if($this->request->isPost()) {
-        $form->setData($this->request->getPost());
-        if($form->isValid()) {
-          $hydrator = new DoctrineObject(
-                $objectManager,
-                'CsnUser\Entity\Inventario'
-          );
-          $material = new Inventario();
-          $data = $form->getData(FormInterface::VALUES_AS_ARRAY);
-          $material = $hydrator->hydrate($data,$material);
-          $objectManager->persist($material);
+          $idMat = $this->request->getPost('ID');
+          if ($idMat) {
+            $material = $objectManager->find('CsnUser\Entity\Inventario',$idMat);
+          } else {
+            $material = new Inventario();
+          }
+          $material->setMATERIAL($this->request->getPost('MATERIAL'));
+          $material->setCANTIDAD($this->request->getPost('CANTIDAD'));
+          $material->setCANTIDADMIN($this->request->getPost('CANTIDADMIN'));
+          $material->setPROVEEDOR($this->request->getPost('PROVEEDOR'));
+          $material->setACTIVO($this->request->getPost('ACTIVO'));
+          $material->setPRECIO($this->request->getPost('PRECIO'));
+          $material->setFECHACADUCIDAD(new \DateTime($this->request->getPost('FECHACADUCIDAD')));
+          if ($idMat) {
+            $objectManager->merge($material);
+          } else {
+            $objectManager->persist($material);
+          }
           $objectManager->flush();
           return new JsonModel(array('chido' => '1','data' => $data, 'material' => $material));
-        } else {
-          echo "error";
         }
+        return new ViewModel(array('form' => $form));
       }
-      return new ViewModel(array('form' => $form));
-    }
+      
+    
 
     public function ListamaterialAction() {
       $this->layout('layout/vacio');

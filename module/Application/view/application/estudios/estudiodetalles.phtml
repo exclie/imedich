@@ -77,14 +77,16 @@
                       <h3><?php echo $categoria['categoria']; if($estudio[0]['ESTADO'] == 1 && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7 || $this->identity()->getRole()->getId() == 5)) { ?><button type="button" class="btn btn-warning" style="float:right" onclick="agregarfila(<?php echo $categoria['ID'] ?>,this)"><span class="glyphicon glyphicon-plus"></span></button><?php } ?></h3>
                       <table class="table" id="t<?php echo $categoria['ID'] ?>">
                         <thead>
-                          <th width="80%">Material</th>
-                          <th>Cantidad</th>
+                          <th width="50%">Material</th>
+                          <th>Notas del estudio</th>
+                          <th width="5%">Cantidad</th>
                           <th></th>
                         </thead>
                         <tbody>
                           <?php $i=0; foreach ($categoria['materiales'] as $mat) { $i++; ?>
                               <tr id="tr<?php echo $categoria['ID'].'-'.$i ?>" idmaterial="<?php echo $mat['id'] ?>">
                                 <td><span class="materiales" onclick="cambiarSelect(this)"><?php echo $mat['material'] ?></span></td>
+                                <td></td>
                                 <td><span class="cantidades" id="span<?php echo $categoria['ID'].'-'.$i ?>" onclick="switchToInput(this.id)"><?php echo $mat['cantidad'] ?></span></td>
                                 <td><?php if($estudio[0]['ESTADO'] == 1 && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7 || $this->identity()->getRole()->getId() == 5)) { ?><span class="glyphicon glyphicon-remove" style="color:crimson;float:right;cursor:pointer" onclick="borrarFila('<?php echo $categoria['ID'].'-'.$i ?>')"></span><?php } ?></td>
                               </tr>
@@ -187,13 +189,13 @@ $(document).ready(function() {
     };
     function agregarfila(categoria,elem) {
         if($("#t"+categoria).length === 0) {
-          $(elem).parent().after("<table class='table' id='t"+categoria+"'><thead><th width='80%'>Material</th><th>Cantidad</th><th></th></thead><tbody></tbody>");
+          $(elem).parent().after("<table class='table' id='t"+categoria+"'><thead><th width='50%'>Material</th><th>Notas del estudio</th><th>Cantidad</th><th></th></thead><tbody></tbody>");
           $("#p"+categoria).remove();
         }
         
         var filasig = document.getElementById("t"+categoria).rows.length;
         var id = "span"+categoria+"-"+filasig;
-        $("#t"+categoria+" tbody").append("<tr id='tr"+categoria+"-"+filasig+"'><td>"+selectMaterial+"</td><td><span class='cantidades' id='"+id+"' onclick='switchToInput(this.id)'>1</span></td><td><span class='glyphicon glyphicon-remove' style='color:crimson;float:right;cursor:pointer'"+' onclick="borrarFila(\''+categoria+'-'+filasig+'\')"></span></td></tr>');
+        $("#t"+categoria+" tbody").append("<tr id='tr"+categoria+"-"+filasig+"'><td>"+selectMaterial+"</td><td><textarea></textarea></td><td><span class='cantidades' id='"+id+"' onclick='switchToInput(this.id)'>1</span></td><td><span class='glyphicon glyphicon-remove' style='color:crimson;float:right;cursor:pointer'"+' onclick="borrarFila(\''+categoria+'-'+filasig+'\')"></span></td></tr>');
         $("#selectMat").chosen();
         setTimeout(function(){ $("#selectMat").trigger('chosen:open'); }, 0);
         $("#selectMat").on('chosen:hiding_dropdown', function() {

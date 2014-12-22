@@ -84,6 +84,9 @@ body {
 }
 .label-entregado {
   background-color: #514DE7;
+  
+}.label-revision {
+  background-color: #708B21;
 }
 
 .panel-morado {

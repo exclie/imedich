@@ -42,6 +42,9 @@
         function extractLast( term ) {
           return split( term ).pop();
         }
+        $('#cEdad').click(function() {
+        	$(this).removeAttr('readonly');
+        });
         $( "#cTitle" )
       .bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -67,6 +70,7 @@
         select: function( event, ui ) {
           $("#cIdPaciente").val(ui.item.id);
           $("#cTitle").val(ui.item.value).attr('readonly',true);
+          $("#cEdad").val(getEdad(ui.item.fecha)).attr('readonly',true);
           var terms = split( this.value );
           terms.pop();
           terms.push( ui.item.value );          
@@ -115,16 +119,30 @@
 
 });
 function borrarevento () {
-	$.post('<?php echo $this->basePath() ?>/agenda/borrarevento',{id:$("#id_evento").val()},
-		function (data){
-			location.reload();
-	});
+	var aceptar = confirm("Al borrar este evento del calendario se eliminará permanentemente, haga click en aceptar para eliminar o cancelar.");
+	if(aceptar == true) {
+		$.post('<?php echo $this->basePath() ?>/agenda/borrarevento',{id:$("#id_evento").val()},
+			function (data){
+				location.reload();
+		});	
+	}
+	
 }
+function getEdad(dateString) {
+    var hoy = new Date();
+    var fechaNacimiento = new Date(dateString);
+    var edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    var m = hoy.getMonth() - fechaNacimiento.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+  }
 function guardarevento () {
 	var evento = $('#cFecha').val();
 	fin = evento+"T"+$('#hasta').val()+':00';
 	inicio = evento+"T"+$('#desde').val()+':00';
-	tel1 = $('#telefono1').val();
+	tel1 = $('#cTel1').val();
 	docenv = $('#cDoctor').val();
 	if(inicio < fin) {
 		$('#cFin').val(fin);
@@ -133,7 +151,7 @@ function guardarevento () {
 		$('#cPacientenr').val(pacientenr);
 		var estudios = $('#sCategorias').val();
 		var edad = $('#cEdad').val();
-		if (pacientenr != '' && estudios != null && edad != '' && tel1 != '' && docenv != '') {
+		if (pacientenr != '' && estudios != null && edad != '' && tel1 != '' && tel1 != null && docenv != '') {
 			guardareventodrop();
 		} else {
 			alert('Los campos de Nombre de paciente,Doctor que le envia, Edad,Telefono 1 y Estudios a realizar necesitan llenarse antes de poder guardar el evento.');
@@ -173,15 +191,36 @@ function objToString (obj) {
 
 function tiposx (id) {
 	var costo = 0;
-    $('#sCategorias').empty();
     $.post("<?php echo $this->basePath() ?>/dependencias/gettipos", {dependencia: id},
           function (data) {
+           $('#sCategorias').empty();
            for(i = 0; i < data.length; i++){
            	costo = (data[i].COSTO*1.16);
             $('#sCategorias').append("<option value='"+data[i].ID+"'>"+data[i].NOMBRECATEGORIA+" ("+numeral(costo).format('$ 0,0.00')+")</option>");
           }
           $('#sCategorias').trigger('chosen:updated');
           });
+  }
+function tipos2 (id) {
+	var costo = 0;
+    $.ajax({
+            type: "POST",
+            url: "<?php echo $this->basePath() ?>/dependencias/gettipos",
+            data: {dependencia: id},
+            dataType: "json",
+            success: function(data) {		            
+               	 $('#sCategorias').empty();
+               	 for(i = 0; i < data.length; i++){
+               	 	costo = (data[i].COSTO*1.16);
+               	  $('#sCategorias').append("<option value='"+data[i].ID+"'>"+data[i].NOMBRECATEGORIA+" ("+numeral(costo).format('$ 0,0.00')+")</option>");
+               	}
+             	verevento();
+             	$('#myModal').modal('show');
+            },
+            error: function(){
+                 
+            }
+    });
   }
 function recomendacionesx () {
 	$('#aRecomendaciones').empty();
@@ -236,12 +275,10 @@ function crearcalendario() {
 			lang: 'es',
 			<?php if($this->identity()->getRole()->getId() != '5' && $this->identity()->getRole()->getId() != '4') { ?>
 			eventClick: function(calEvent, jsEvent, view) {
-					console.log(calEvent);
 					document.getElementById('agendas').reset();
 			        //alert('Event: ' + calEvent.start.format());
 			        var arreglo_fecha = calEvent.start.format().split("T");
 			        $('#cFecha').val(arreglo_fecha[0]);
-			        $("#sCategorias option:selected").removeAttr("selected");
 			        $("#cInicio").val(calEvent.start.format());
 			        $("#desde").val(calEvent.start.format("HH:mm"));
 			        $("#hasta").val(calEvent.end.format("HH:mm"));
@@ -261,9 +298,7 @@ function crearcalendario() {
 			   		$("#lBorrar").show();
 			   		$("#sColores").val(calEvent.color);
 			        $("#modalLabel").text(calEvent.start.format("DD/MM/YY"));
-			        verevento();			   
-			        $('#myModal').modal('show');
-
+			        tipos2(calEvent.dependencia);  
 			},
 			<?php } ?>
 			<?php if($this->identity()->getRole()->getId() != '5' && $this->identity()->getRole()->getId() != '4') { ?>
@@ -282,11 +317,11 @@ function crearcalendario() {
 			        fin.add('m',30);
 			        $("#hasta").val(fin.format("HH:mm"));
 			        $("#id_evento").val('');
-			        $("#cRefDocId").val('');
+			        $("#cRefDocId").val('');			       
 			        $("#cIdPaciente").val('');
 			        $("#sCategorias option:selected").removeAttr("selected");
 			        $("#lBorrar").hide();
-			        recomendacionesx();
+			        tiposx(1);			    
 			        $("#modalLabel").text(date.format("DD/MM/YY"));
 			        $('#myModal').modal('show');
 			        $("#sCategorias").trigger("chosen:updated");
@@ -300,6 +335,10 @@ function crearcalendario() {
 				$("#cTitle").val(event.pacientenr);
 				$("#aDesc").val(event.descripcion);
 				$("#cFin").val(event.end.format());
+				$("#cTel1").val(event.telefono1);
+				$("#cEdad").val(event.edad);
+				$("#cDoc").val(event.refdoctor);
+				$("#cTel2").val(event.telefono2);
 				$("#cFecha").val(fecha[0]);
 				$("#sDependencia").val(event.dependencia);
 				$("#id_evento").val(event.id);
@@ -315,6 +354,10 @@ function crearcalendario() {
 				$("#cTitle").val(event.pacientenr);
 				$("#aDesc").val(event.descripcion);
 				$("#cFin").val(event.end.format());
+				$("#cEdad").val(event.edad);
+				$("#cTel1").val(event.telefono1);
+				$("#cTel2").val(event.telefono2);
+				$("#cDoc").val(event.refdoctor);
 				$("#sDependencia").val(event.dependencia);
 				$("#id_evento").val(event.id);
 				$("#cRefDocId").val(event.refdocid);
@@ -335,7 +378,7 @@ function getEdad(dateString) {
         edad--;
     }
     return edad;
-  }
+}
 function verevento() {
 	var idDoc = <?php echo $this->identity()->getId(); ?>;
 	var idEv = $("#id_evento").val();
@@ -346,17 +389,28 @@ function verevento() {
             data: {idDoctor:idDoc,idEvento:idEv},
             dataType: "json",
             success: function(data) {
-               for(i=0;i<data.length;i++) {
-               		$("#sCategorias option[value = '"+data[i].ID+"' ]").attr("selected", true);
-               }
-           		$("#sCategorias").trigger("chosen:updated");
-           		recomendacionesx();
+            	elemento = document.getElementById('sCategorias');
+            	for(i=0;i<data.length;i++){
+            		selectItemByValue(elemento,data[i].ID);	
+            	}               	        
             },
             error: function(){
                   alert('Ocurrió un error, inténtelo más tarde.');
             }
     });
+    recomendacionesx();
 }
+
+function selectItemByValue(elmnt, value){
+
+    for(var i=0; i < elmnt.options.length; i++)
+    {
+      if(elmnt.options[i].value == value)
+        elmnt.options[i].selected = true;
+    }
+    $("#sCategorias").trigger("chosen:updated");
+  }
+
 </script>
 <div class="row">
 	<div class="form-element col-lg-4">

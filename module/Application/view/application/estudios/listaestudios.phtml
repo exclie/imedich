@@ -49,6 +49,9 @@
                             <?php if ($est['esNombre'] == 'Agendado'): ?>
                                 <span class="label label-default">Agendado</span>
                             <?php endif ?>
+                            <?php if ($est['esNombre'] == 'Por revisar'): ?>
+                                <span class="label label-revision">En Revision</span>
+                            <?php endif ?>
 
                             <?php if ($est[0]['PAGADO'] == 1 && ($this->identity()->getRole()->getId() != 5 && $this->identity()->getRole()->getId() != 4)) { ?>
                                 <span class="label label-azul" onclick="verPago(<?php echo $est[0]['ID'] ?>)" style="cursor:pointer">P</span>

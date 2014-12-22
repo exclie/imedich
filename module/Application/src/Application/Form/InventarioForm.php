@@ -21,7 +21,10 @@ class InventarioForm extends Form implements InputFilterProviderInterface
 
         $this->add(array(
             'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'ID'
+            'name' => 'ID',
+            'attributes' => array(
+                'id' => 'cIdmat',
+            ),
         ));
 
         $this->add(array(
@@ -45,6 +48,28 @@ class InventarioForm extends Form implements InputFilterProviderInterface
             'attributes' => array(
                 'class' => 'Input form-control',
                 'id' => 'cFechacaducidad',
+            ),
+        ));
+        $this->add(array(
+            'type'    => 'Zend\Form\Element\Text',
+            'name'    => 'PROVEEDOR',
+            'options' => array(
+                'label' => 'Proveedor:',
+            ),
+            'attributes' => array(
+                'class' => 'Input form-control',
+                'id' => 'cProveedor',
+            ),
+        ));
+        $this->add(array(
+            'type'    => 'Zend\Form\Element\Number',
+            'name'    => 'PRECIO',
+            'options' => array(
+                'label' => 'Precio:',
+            ),
+            'attributes' => array(
+                'class' => 'Input form-control',
+                'id' => 'cPrecio',
             ),
         ));
         $this->add(array(
@@ -73,6 +98,19 @@ class InventarioForm extends Form implements InputFilterProviderInterface
                 'onblur' => 'verificar_campo(this)',
             ),
         ));
+        $this->add(array(
+                     'type' => 'Zend\Form\Element\Checkbox',
+                     'name' => 'ACTIVO',
+                     'options' => array(
+                             'use_hidden_element' => true,
+                             'checked_value' => true,
+                             'unchecked_value' => false
+                     ),
+                     'attributes' => array(
+                        'id' => 'checkActivo',
+                        'checked' => true,
+                    ),
+             ));
    
     }
     public function getInputFilterSpecification() {

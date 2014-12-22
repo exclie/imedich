@@ -8,10 +8,11 @@ if (defined('RUNNING_FROM_ROOT')) {
   echo $this->headScript()
          ->appendFile($this->basePath() . '/js/downloads/dropzone.js')
          ->appendFile($this->basePath() . '/js/fotorama/fotorama.js');
+   $rolusuario = $this->identity()->getRole()->getId();
  ?>
 
 <h4>Interpretación del estudio.</h4> 
-<textarea class="form-control" rows="5" style="margin-bottom:20px" id="interpretacion" <?php if($estado[0]['ESTADO'] == 3 || ($estado[0]['ESTADO'] == 2 && $estado[0]['REVISION'] == false) || ($this->identity()->getRole()->getId() != 4 && $this->identity()->getRole()->getId() != 7)) { echo "disabled";} ?>><?php echo $estado[0]['INTERPRETACION'] ?></textarea>
+<textarea class="form-control" rows="25" style="margin-bottom:20px" id="interpretacion" <?php if($estado[0]['ESTADO'] == 3 || ($estado[0]['ESTADO'] == 2 && $estado[0]['REVISION'] == false) || ($rolusuario != 4 && $rolusuario != 5 && $rolusuario != 7)) { echo "disabled";} ?>><?php echo $estado[0]['INTERPRETACION'] ?></textarea>
 <div class="fotorama" data-nav="thumbs" data-width="100%" data-ratio="800/600">
 	<?php if($imagenes) {
           foreach($imagenes as $i) { $foto = explode('.',$i['IMAGEN']);?>
@@ -21,8 +22,9 @@ if (defined('RUNNING_FROM_ROOT')) {
 	<?php } ?>
  <?php } ?>
 </div>
-<?php if($estado[0]['ESTADO'] == 2 && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7)) { ?>
+<?php if($estado[0]['ESTADO'] == 2 || $estado[0]['ESTADO'] == 9 && ($rolusuario == 4 || $rolusuario == 7 || $rolusuario == 5)) { ?>
 <div class="panel-heading">
+      <?php if($rolusuario == 5) { ?>
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:dodgerblue">
           Añadir imágenes
@@ -37,20 +39,21 @@ if (defined('RUNNING_FROM_ROOT')) {
         	</form>
       </div>
     </div>
+    <?php } ?>
 <div class="col-sm-12">
   <button type="button" class="btn btn-primary" style="float:right" onclick="interpretacion()">
     Guardar estudio
   </button>
 </div>
 <?php } ?>
-<?php if($estado[0]['ESTADO'] == 3 && $estado[0]['REVISION'] == false && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7)) { ?>
+<?php if($estado[0]['ESTADO'] == 3 && $estado[0]['REVISION'] == false && ($rolusuario == 4 || $rolusuario == 5 || $rolusuario == 7)) { ?>
     <button type="button" class="btn btn-warning" onclick="abrirestudio()">Abrir estudio para int.</button>
 <?php } ?>
 <?php if($estado[0]['ESTADO'] == 4 && $estado[0]['REVISION'] == true) { ?>
     <a href="<?php echo $this->basePath().'/estudios/interpretacionpdf/'.$idEstudio ?>"><button type="button" class="btn btn-warning">Imprimir interpretación.</button></a>
 <?php } ?>
 <script>
-<?php if($estado[0]['ESTADO'] == 2 && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7)) { ?>
+<?php if($estado[0]['ESTADO'] == 2 || $estado[0]['ESTADO'] == 9 && ($rolusuario == 4 || $rolusuario == 7 || $rolusuario == 5)) { ?>
 var myDropzone = new Dropzone("#zona-drop", {
 	paramName: "file", // The name that will be used to transfer the file
 	  maxFilesize: 2, // MB
@@ -104,7 +107,7 @@ function interpretacion() {
 }
 <?php } ?>
 
-<?php if($estado[0]['ESTADO'] == 3 && $estado[0]['REVISION'] == false && ($this->identity()->getRole()->getId() == 4 || $this->identity()->getRole()->getId() == 7)) { ?>
+<?php if($estado[0]['ESTADO'] == 3 && $estado[0]['REVISION'] == false && ($rolusuario == 4 || $rolusuario == 5 || $rolusuario == 7)) { ?>
 function abrirestudio() {
   $.ajax({
            type: "POST",

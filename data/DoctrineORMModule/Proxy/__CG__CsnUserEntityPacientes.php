@@ -64,10 +64,10 @@ class Pacientes extends \CsnUser\Entity\Pacientes implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'ID', 'CURP', 'SEXO', 'NOMBRE', 'APELLIDO_PATERNO', 'APELLIDO_MATERNO', 'FECHA_NACIMIENTO', 'NIVEL_SOCIOECONOMICO', 'OCUPACION', 'EMBARAZO', 'TIPO_SANGUINEO', 'DISCAPACIDAD', 'GRUPO_ETNICO', 'ESTADO', 'MUNICIPIO', 'CALLE', 'NUMERO_EXT', 'NUMERO_INT', 'VIVIENDA', 'CODIGO_POSTAL', 'COLONIA', 'TELEFONO_1', 'TELEFONO_2', 'EMAIL', 'RFC', 'CLIENTE', 'FECHA_REGISTRO', 'AFILIACION', 'ANTECEDENTES');
+            return array('__isInitialized__', 'ID', 'CURP', 'SEXO', 'NOMBRE', 'APELLIDO_PATERNO', 'APELLIDO_MATERNO', 'FECHA_NACIMIENTO', 'NIVEL_SOCIOECONOMICO', 'OCUPACION', 'EMBARAZO', 'TIPO_SANGUINEO', 'DISCAPACIDAD', 'GRUPO_ETNICO', 'ESTADO', 'RELIGION', 'MUNICIPIO', 'CALLE', 'NUMERO_EXT', 'NUMERO_INT', 'VIVIENDA', 'CODIGO_POSTAL', 'COLONIA', 'TELEFONO_1', 'TELEFONO_2', 'EMAIL', 'RFC', 'FECHA_REGISTRO', 'USUARIO', 'ANTECEDENTES', 'DEPENDENCIAS');
         }
 
-        return array('__isInitialized__', 'ID', 'CURP', 'SEXO', 'NOMBRE', 'APELLIDO_PATERNO', 'APELLIDO_MATERNO', 'FECHA_NACIMIENTO', 'NIVEL_SOCIOECONOMICO', 'OCUPACION', 'EMBARAZO', 'TIPO_SANGUINEO', 'DISCAPACIDAD', 'GRUPO_ETNICO', 'ESTADO', 'MUNICIPIO', 'CALLE', 'NUMERO_EXT', 'NUMERO_INT', 'VIVIENDA', 'CODIGO_POSTAL', 'COLONIA', 'TELEFONO_1', 'TELEFONO_2', 'EMAIL', 'RFC', 'CLIENTE', 'FECHA_REGISTRO', 'AFILIACION', 'ANTECEDENTES');
+        return array('__isInitialized__', 'ID', 'CURP', 'SEXO', 'NOMBRE', 'APELLIDO_PATERNO', 'APELLIDO_MATERNO', 'FECHA_NACIMIENTO', 'NIVEL_SOCIOECONOMICO', 'OCUPACION', 'EMBARAZO', 'TIPO_SANGUINEO', 'DISCAPACIDAD', 'GRUPO_ETNICO', 'ESTADO', 'RELIGION', 'MUNICIPIO', 'CALLE', 'NUMERO_EXT', 'NUMERO_INT', 'VIVIENDA', 'CODIGO_POSTAL', 'COLONIA', 'TELEFONO_1', 'TELEFONO_2', 'EMAIL', 'RFC', 'FECHA_REGISTRO', 'USUARIO', 'ANTECEDENTES', 'DEPENDENCIAS');
     }
 
     /**
@@ -281,6 +281,28 @@ class Pacientes extends \CsnUser\Entity\Pacientes implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAPELLIDO_MATERNO', array($APELLIDO_MATERNO));
 
         return parent::setAPELLIDO_MATERNO($APELLIDO_MATERNO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDEPENDENCIAS($DEPENDENCIAS)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDEPENDENCIAS', array($DEPENDENCIAS));
+
+        return parent::setDEPENDENCIAS($DEPENDENCIAS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDEPENDENCIAS()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDEPENDENCIAS', array());
+
+        return parent::getDEPENDENCIAS();
     }
 
     /**
@@ -605,6 +627,17 @@ class Pacientes extends \CsnUser\Entity\Pacientes implements \Doctrine\ORM\Proxy
     /**
      * {@inheritDoc}
      */
+    public function addANTECEDENTES(\Doctrine\Common\Collections\Collection $ANTECEDENTES)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addANTECEDENTES', array($ANTECEDENTES));
+
+        return parent::addANTECEDENTES($ANTECEDENTES);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function addANTECEDENTE(\CsnUser\Entity\CIE10 $CIE10)
     {
 
@@ -787,6 +820,336 @@ class Pacientes extends \CsnUser\Entity\Pacientes implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCLIENTE', array($CLIENTE));
 
         return parent::setCLIENTE($CLIENTE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAPELLIDOPATERNO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAPELLIDOPATERNO', array());
+
+        return parent::getAPELLIDOPATERNO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAPELLIDOPATERNO($APELLIDO_PATERNO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAPELLIDOPATERNO', array($APELLIDO_PATERNO));
+
+        return parent::setAPELLIDOPATERNO($APELLIDO_PATERNO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAPELLIDOMATERNO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAPELLIDOMATERNO', array());
+
+        return parent::getAPELLIDOMATERNO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAPELLIDOMATERNO($APELLIDO_MATERNO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAPELLIDOMATERNO', array($APELLIDO_MATERNO));
+
+        return parent::setAPELLIDOMATERNO($APELLIDO_MATERNO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFECHANACIMIENTO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFECHANACIMIENTO', array());
+
+        return parent::getFECHANACIMIENTO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFECHANACIMIENTO($FECHA_NACIMIENTO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFECHANACIMIENTO', array($FECHA_NACIMIENTO));
+
+        return parent::setFECHANACIMIENTO($FECHA_NACIMIENTO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNIVELSOCIOECONOMICO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNIVELSOCIOECONOMICO', array());
+
+        return parent::getNIVELSOCIOECONOMICO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setNIVELSOCIOECONOMICO($NIVEL_SOCIOECONOMICO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNIVELSOCIOECONOMICO', array($NIVEL_SOCIOECONOMICO));
+
+        return parent::setNIVELSOCIOECONOMICO($NIVEL_SOCIOECONOMICO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTIPOSANGUINEO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTIPOSANGUINEO', array());
+
+        return parent::getTIPOSANGUINEO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTIPOSANGUINEO($TIPO_SANGUINEO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTIPOSANGUINEO', array($TIPO_SANGUINEO));
+
+        return parent::setTIPOSANGUINEO($TIPO_SANGUINEO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getGRUPOETNICO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getGRUPOETNICO', array());
+
+        return parent::getGRUPOETNICO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setGRUPOETNICO($GRUPO_ETNICO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setGRUPOETNICO', array($GRUPO_ETNICO));
+
+        return parent::setGRUPOETNICO($GRUPO_ETNICO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRELIGION()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRELIGION', array());
+
+        return parent::getRELIGION();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRELIGION($RELIGION)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRELIGION', array($RELIGION));
+
+        return parent::setRELIGION($RELIGION);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNUMEROEXT()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNUMEROEXT', array());
+
+        return parent::getNUMEROEXT();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setNUMEROEXT($NUMERO_EXT)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNUMEROEXT', array($NUMERO_EXT));
+
+        return parent::setNUMEROEXT($NUMERO_EXT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNUMEROINT()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNUMEROINT', array());
+
+        return parent::getNUMEROINT();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setNUMEROINT($NUMERO_INT)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNUMEROINT', array($NUMERO_INT));
+
+        return parent::setNUMEROINT($NUMERO_INT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCODIGOPOSTAL()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCODIGOPOSTAL', array());
+
+        return parent::getCODIGOPOSTAL();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCODIGOPOSTAL($CODIGO_POSTAL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCODIGOPOSTAL', array($CODIGO_POSTAL));
+
+        return parent::setCODIGOPOSTAL($CODIGO_POSTAL);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTELEFONO1()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTELEFONO1', array());
+
+        return parent::getTELEFONO1();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTELEFONO1($TELEFONO_1)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTELEFONO1', array($TELEFONO_1));
+
+        return parent::setTELEFONO1($TELEFONO_1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTELEFONO2()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTELEFONO2', array());
+
+        return parent::getTELEFONO2();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTELEFONO2($TELEFONO_2)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTELEFONO2', array($TELEFONO_2));
+
+        return parent::setTELEFONO2($TELEFONO_2);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFECHAREGISTRO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFECHAREGISTRO', array());
+
+        return parent::getFECHAREGISTRO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFECHAREGISTRO($FECHA_REGISTRO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setFECHAREGISTRO', array($FECHA_REGISTRO));
+
+        return parent::setFECHAREGISTRO($FECHA_REGISTRO);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAFILIACION()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAFILIACION', array());
+
+        return parent::getAFILIACION();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAFILIACION($AFILIACION)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAFILIACION', array($AFILIACION));
+
+        return parent::setAFILIACION($AFILIACION);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUSUARIO()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUSUARIO', array());
+
+        return parent::getUSUARIO();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUSUARIO($USUARIO)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUSUARIO', array($USUARIO));
+
+        return parent::setUSUARIO($USUARIO);
     }
 
 }
